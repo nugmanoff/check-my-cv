@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Viewer } from "@react-pdf-viewer/core";
+import { dropPlugin } from "@react-pdf-viewer/drop";
+
 
 const Preview = () => {
   const [url, setUrl] = React.useState("");
@@ -9,6 +11,8 @@ const Preview = () => {
     const files = e.target.files;
     files.length > 0 && setUrl(URL.createObjectURL(files[0]));
   };
+
+  const dropPluginInstance = dropPlugin();
 
   return (
     <div
@@ -26,7 +30,7 @@ const Preview = () => {
               height: "100%",
             }}
           >
-            <Viewer fileUrl={url} />
+            <Viewer plugins={[dropPluginInstance]} fileUrl={url} />
           </div>
         ) : (
           <div
@@ -41,7 +45,7 @@ const Preview = () => {
               marginTop: "5%",
             }}
           >
-            Preview area
+            <Viewer plugins={[dropPluginInstance]} fileUrl={"./drop-here.pdf"} defaultScale={10} />
           </div>
         )}
       </div>
@@ -49,4 +53,4 @@ const Preview = () => {
   );
 };
 
-export default Preview;
+export { Preview };
