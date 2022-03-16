@@ -44,8 +44,7 @@ const HighlightPopup = ({
     </div>
   ) : null;
 
-const PRIMARY_PDF_URL = "https://arxiv.org/pdf/1708.08021.pdf";
-const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480.pdf";
+const PRIMARY_PDF_URL = "https://rawcdn.githack.com/nugmanoff/check-my-cv/c9347dddf133bb94e5b23b55d3df10e4f2c67d73/assets/aidar-nugmanov-cv-28feb-2020.pdf";
 
 const searchParams = new URLSearchParams(document.location.search);
 
@@ -67,7 +66,7 @@ class App extends Component<{}, State> {
 
   toggleDocument = () => {
     const newUrl =
-      this.state.url === PRIMARY_PDF_URL ? SECONDARY_PDF_URL : PRIMARY_PDF_URL;
+      this.state.url === PRIMARY_PDF_URL ? PRIMARY_PDF_URL : PRIMARY_PDF_URL;
 
     this.setState({
       url: newUrl,
