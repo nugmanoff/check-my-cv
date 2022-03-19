@@ -45,6 +45,7 @@ const App = () => {
   const [sharedButtonStatus, setSharedButtonStatus] = useState(
     ButtonStatus.NORMAL
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const onResetHighlightsClicked = () => {
     resetHighlightsAndHash();
@@ -100,7 +101,7 @@ const App = () => {
   const getResumeIfAny = useCallback(async () => {
     if (document.location.pathname !== "/") {
       const id = document.location.pathname.slice(1);
-
+      setIsLoading(true);
       try {
         const result = await get(databaseRef(database, `resumes/${id}`));
         if (result.exists()) {
@@ -117,12 +118,15 @@ const App = () => {
             : [];
 
           setHighlights(resume.comments ?? []);
+          setIsLoading(false);
         } else {
           document.location.pathname = "/";
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("error occurred", error);
         document.location.pathname = "/";
+        setIsLoading(false);
       }
     }
   }, []);
@@ -215,19 +219,32 @@ const App = () => {
         isShareHidden={url === ""}
         setSharedButtonStatus={setSharedButtonStatus}
         sharedButtonStatus={sharedButtonStatus}
+        isLoading={isLoading}
       />
       <div style={{ height: "100vh", width: "75vw", position: "relative" }}>
         {url === "" ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-            }}
-          >
-            <Dropzone onFileAccepted={onPdfUploaded} />
-          </div>
+          isLoading ? (
+            <Center h="100%" w="100%">
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="teal.500"
+                size="xl"
+              />
+            </Center>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <Dropzone onFileAccepted={onPdfUploaded} />
+            </div>
+          )
         ) : (
           <PdfLoader
             url={url}
