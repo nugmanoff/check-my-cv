@@ -11,7 +11,7 @@ export const Button = (props: any) => {
     const {status, onClick, children} = props;
     switch (status) {
         case ButtonStatus.LOADING:
-            return <button className="resumeButton">
+            return <button className="resumeButton" disabled>
                 <div className="loader"/>
             </button>
         case ButtonStatus.SUCCESS:

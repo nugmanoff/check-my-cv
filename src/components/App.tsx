@@ -25,7 +25,8 @@ import {
 import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
 import "style/App.css";
-import { cleanup } from "@testing-library/react";
+
+let scrollViewerTo = (highlight: IHighlight) => {};
 
 const parseIdFromHash = (): string =>
   document.location.hash.slice("#highlight-".length);
@@ -85,8 +86,6 @@ const App = () => {
       `Share link generated successfully: ${window.location.origin}/${id}`
     );
   };
-
-  let scrollViewerTo = (highlight: any) => {};
 
   const scrollToHighlightFromHash = () => {
     const highlight = getHighlightById(parseIdFromHash());
