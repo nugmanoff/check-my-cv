@@ -1,20 +1,28 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import type {IHighlight, NewHighlight} from "react-pdf-highlighter/";
-import {AreaHighlight, Highlight, PdfHighlighter, PdfLoader, Popup, Tip,} from "react-pdf-highlighter/";
-import {Spinner} from "./Spinner";
-import {Sidebar} from "./Sidebar";
-import {HighlightPopup} from "./HighlightPopup"
-import {database, storage, storageRef} from "utils/firebase";
-import {getDownloadURL, uploadBytes} from "firebase/storage";
-import {get, ref as databaseRef, set, update,} from "firebase/database";
+import type { IHighlight, NewHighlight } from "react-pdf-highlighter/";
+import {
+  AreaHighlight,
+  Highlight,
+  PdfHighlighter,
+  PdfLoader,
+  Popup,
+  Tip,
+} from "react-pdf-highlighter/";
+import { Spinner } from "./Spinner";
+import { Sidebar } from "./Sidebar";
+import { HighlightPopup } from "./HighlightPopup";
+import { database, storage, storageRef } from "utils/firebase";
+import { getDownloadURL, uploadBytes } from "firebase/storage";
+import { get, ref as databaseRef, set, update } from "firebase/database";
 
-import {generateCommentId, generateResumeId} from "utils/id-generator";
+import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
 import "style/App.css";
+import { cleanup } from "@testing-library/react";
 
-const parseIdFromHash = () =>
-    document.location.hash.slice("#highlight-".length);
+const parseIdFromHash = (): string =>
+  document.location.hash.slice("#highlight-".length);
 
 const resetHash = () => {
   document.location.hash = "";
@@ -26,7 +34,7 @@ const App = () => {
   const [status, setStatus] = useState("");
 
   const onResetHighlightsClicked = () => {
-    setHighlights([])
+    setHighlights([]);
     resetHash();
   };
 
@@ -39,9 +47,9 @@ const App = () => {
     const id = generateResumeId();
     const ref = storageRef(storage, id);
     const file = URLwithStore.getFromObjectURL(url);
-    const metadata = {contentType: "application/pdf"};
+    const metadata = { contentType: "application/pdf" };
 
-    setStatus("Uploading file...")
+    setStatus("Uploading file...");
 
     const fileUploadResult = await uploadBytes(ref, file, metadata);
 
@@ -52,24 +60,25 @@ const App = () => {
     setStatus("Saving link...");
 
     const databaseWriteResult = await set(
-        databaseRef(database, "resumes/" + id),
-        {
-          fileUrl: fileUrl,
-          comments: highlights
-        }
+      databaseRef(database, "resumes/" + id),
+      {
+        fileUrl: fileUrl,
+        comments: highlights,
+      }
     );
 
-    setStatus(`Share link generated successfully: check-my-cv.vercel.app/${id}`)
+    setStatus(
+      `Share link generated successfully: check-my-cv.vercel.app/${id}`
+    );
   };
 
-  let scrollViewerTo = (highlight: any) => {
-  };
+  let scrollViewerTo = (highlight: any) => {};
 
   const scrollToHighlightFromHash = () => {
     // let id = '6255663221315289'
     const highlight = getHighlightById(parseIdFromHash());
     // const highlight = getHighlightById(id);
-    console.log(highlight, 'highlught found')
+    console.log(highlight, "highlught found");
     if (highlight) {
       scrollViewerTo(highlight);
     }
@@ -85,14 +94,14 @@ const App = () => {
         if (result.exists()) {
           let resume = result.val();
           setUrl(resume.fileUrl);
-          console.log(resume)
+          console.log(resume);
 
-            resume.comments = resume?.comments.map((comment: any) => {
-              if (!comment.position.hasOwnProperty('rects')) {
-                comment.position['rects'] = [];
-                return comment;
-              } else return comment;
-            })
+          resume.comments = resume?.comments.map((comment: any) => {
+            if (!comment.position.hasOwnProperty("rects")) {
+              comment.position["rects"] = [];
+              return comment;
+            } else return comment;
+          });
 
           setHighlights(resume.comments ?? []);
         } else {
@@ -103,54 +112,62 @@ const App = () => {
         document.location.pathname = "/";
       }
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    window.addEventListener(
-        "hashchange",
-        scrollToHighlightFromHash,
-        false
-    );
+    window.addEventListener("hashchange", scrollToHighlightFromHash, false);
+    return () => {
+      document.removeEventListener("hashchange", scrollToHighlightFromHash);
+    };
+  }, [highlights]);
 
-    getResumeIfAny().then()
-  }, [getResumeIfAny])
+  useEffect(() => {
+    getResumeIfAny().then();
+  }, [getResumeIfAny]);
 
   const synchronizeHighlights = async (newHighlights: NewHighlight[]) => {
     if (document.location.pathname !== "/") {
       const id = document.location.pathname.slice(1);
 
       const updates = {
-        [`/resumes/${id}/comments`]: {...newHighlights},
+        [`/resumes/${id}/comments`]: { ...newHighlights },
       };
 
       try {
         const databaseWriteResult = await update(
-            databaseRef(database),
-            updates
+          databaseRef(database),
+          updates
         );
       } catch {
         console.log("error occurred while syncing");
       }
     }
-  }
+  };
 
   const getHighlightById = (id: string) => {
-    console.log(highlights)
+    console.log(highlights);
     return highlights.find((highlight) => highlight.id === id);
-  }
+  };
 
   const addHighlight = (highlight: NewHighlight) => {
     console.log("Saving highlight", highlight, highlights);
     setHighlights((prevState) => {
-      let newHighlights = [{...highlight, id: generateCommentId()}, ...prevState];
+      let newHighlights = [
+        { ...highlight, id: generateCommentId() },
+        ...prevState,
+      ];
       synchronizeHighlights(newHighlights);
       return newHighlights;
     });
-  }
+  };
 
-  console.log(highlights)
+  console.log(highlights);
 
-  const updateHighlight = (highlightId: string, position: Object, content: Object) => {
+  const updateHighlight = (
+    highlightId: string,
+    position: Object,
+    content: Object
+  ) => {
     console.log("Updating highlight", highlightId, position, content);
 
     const newHighlights = highlights.map((h) => {
@@ -161,124 +178,124 @@ const App = () => {
         ...rest
       } = h;
       return id === highlightId
-          ? {
+        ? {
             id,
-            position: {...originalPosition, ...position},
-            content: {...originalContent, ...content},
+            position: { ...originalPosition, ...position },
+            content: { ...originalContent, ...content },
             ...rest,
           }
-          : h;
-    })
+        : h;
+    });
 
     setHighlights(newHighlights);
     synchronizeHighlights(newHighlights);
-  }
+  };
 
   return (
-      <div className="App" style={{display: "flex", height: "100vh"}}>
-        <Sidebar
-            status={status}
-            highlights={highlights}
-            resetHighlights={onResetHighlightsClicked}
-            onPdfUploaded={onPdfUploaded}
-            onShareClicked={onShareClicked}
-        />
-        <div
+    <div className="App" style={{ display: "flex", height: "100vh" }}>
+      <Sidebar
+        status={status}
+        highlights={highlights}
+        resetHighlights={onResetHighlightsClicked}
+        onPdfUploaded={onPdfUploaded}
+        onShareClicked={onShareClicked}
+      />
+      <div
+        style={{
+          height: "100vh",
+          width: "75vw",
+          position: "relative",
+        }}
+      >
+        {url === "" ? (
+          <p
             style={{
-              height: "100vh",
-              width: "75vw",
+              color: "black",
               position: "relative",
             }}
-        >
-          {url === "" ? (
-              <p
-                  style={{
-                    color: "black",
-                    position: "relative",
-                  }}
-              >
-                Upload resume
-              </p>
-          ) : (
-              <PdfLoader url={url} beforeLoad={<Spinner/>}>
-                {(pdfDocument) => (
-                    <PdfHighlighter
-                        pdfDocument={pdfDocument}
-                        enableAreaSelection={(event) => event.altKey}
-                        onScrollChange={resetHash}
-                        // pdfScaleValue="page-width"
-                        scrollRef={(scrollTo) => {
-                          scrollViewerTo = scrollTo;
-                          console.log(scrollTo, 'scroll to in scroll ref')
-                          scrollToHighlightFromHash();
-                        }}
-                        onSelectionFinished={(
-                            position,
-                            content,
-                            hideTipAndSelection,
-                            transformSelection
-                        ) => (
-                            <Tip
-                                onOpen={transformSelection}
-                                onConfirm={(comment) => {
-                                  addHighlight({content, position, comment});
-                                  hideTipAndSelection();
-                                }}
-                            />
-                        )}
-                        highlightTransform={(
-                            highlight,
-                            index,
-                            setTip,
-                            hideTip,
-                            viewportToScaled,
-                            screenshot,
-                            isScrolledTo
-                        ) => {
-                          const isTextHighlight = !Boolean(
-                              highlight.content && highlight.content.image
-                          );
-
-                          const component = isTextHighlight ? (
-                              <Highlight
-                                  isScrolledTo={isScrolledTo}
-                                  position={highlight.position}
-                                  comment={highlight.comment}
-                              />
-                          ) : (
-                              <AreaHighlight
-                                  isScrolledTo={isScrolledTo}
-                                  highlight={highlight}
-                                  onChange={(boundingRect) => {
-                                    updateHighlight(
-                                        highlight.id,
-                                        {boundingRect: viewportToScaled(boundingRect)},
-                                        {image: screenshot(boundingRect)}
-                                    );
-                                  }}
-                              />
-                          );
-
-                          return (
-                              <Popup
-                                  popupContent={<HighlightPopup {...highlight} />}
-                                  onMouseOver={(popupContent) =>
-                                      setTip(highlight, (highlight) => popupContent)
-                                  }
-                                  onMouseOut={hideTip}
-                                  key={index}
-                                  children={component}
-                              />
-                          );
-                        }}
-                        highlights={highlights}
-                    />
+          >
+            Upload resume
+          </p>
+        ) : (
+          <PdfLoader url={url} beforeLoad={<Spinner />}>
+            {(pdfDocument) => (
+              <PdfHighlighter
+                pdfDocument={pdfDocument}
+                enableAreaSelection={(event) => event.altKey}
+                onScrollChange={resetHash}
+                // pdfScaleValue="page-width"
+                scrollRef={(scrollTo) => {
+                  scrollViewerTo = scrollTo;
+                  console.log(scrollTo, "scroll to in scroll ref");
+                  scrollToHighlightFromHash();
+                }}
+                onSelectionFinished={(
+                  position,
+                  content,
+                  hideTipAndSelection,
+                  transformSelection
+                ) => (
+                  <Tip
+                    onOpen={transformSelection}
+                    onConfirm={(comment) => {
+                      addHighlight({ content, position, comment });
+                      hideTipAndSelection();
+                    }}
+                  />
                 )}
-              </PdfLoader>
-          )}
-        </div>
+                highlightTransform={(
+                  highlight,
+                  index,
+                  setTip,
+                  hideTip,
+                  viewportToScaled,
+                  screenshot,
+                  isScrolledTo
+                ) => {
+                  const isTextHighlight = !Boolean(
+                    highlight.content && highlight.content.image
+                  );
+
+                  const component = isTextHighlight ? (
+                    <Highlight
+                      isScrolledTo={isScrolledTo}
+                      position={highlight.position}
+                      comment={highlight.comment}
+                    />
+                  ) : (
+                    <AreaHighlight
+                      isScrolledTo={isScrolledTo}
+                      highlight={highlight}
+                      onChange={(boundingRect) => {
+                        updateHighlight(
+                          highlight.id,
+                          { boundingRect: viewportToScaled(boundingRect) },
+                          { image: screenshot(boundingRect) }
+                        );
+                      }}
+                    />
+                  );
+
+                  return (
+                    <Popup
+                      popupContent={<HighlightPopup {...highlight} />}
+                      onMouseOver={(popupContent) =>
+                        setTip(highlight, (highlight) => popupContent)
+                      }
+                      onMouseOut={hideTip}
+                      key={index}
+                      children={component}
+                    />
+                  );
+                }}
+                highlights={highlights}
+              />
+            )}
+          </PdfLoader>
+        )}
       </div>
+    </div>
   );
-}
+};
 
 export default App;
