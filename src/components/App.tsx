@@ -25,6 +25,7 @@ import {
 import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
 import "style/App.css";
+import {ButtonStatus} from "./Button";
 
 let scrollViewerTo = (highlight: IHighlight) => {};
 
@@ -40,6 +41,9 @@ const App = () => {
   const [highlights, setHighlights] = useState([] as IHighlight[]);
   const [status, setStatus] = useState("");
   const [resumeId, setResumeId] = useState("");
+  const [sharedButtonStatus, setSharedButtonStatus] = useState(
+      ButtonStatus.NORMAL
+  );
 
   const onResetHighlightsClicked = () => {
     resetHighlightsAndHash();
@@ -211,26 +215,18 @@ const App = () => {
         onPdfUploaded={onPdfUploaded}
         onShareClicked={onShareClicked}
         isShareHidden={url === ""}
+        setSharedButtonStatus={setSharedButtonStatus}
+        sharedButtonStatus={sharedButtonStatus}
       />
-      <div
-        style={{
-          height: "100vh",
-          width: "75vw",
-          position: "relative",
-        }}
-      >
+      <div  style={{ height: "100vh", width: "75vw", position: "relative" }} >
         {url === "" ? (
-          <p
-            style={{
-              color: "black",
-              position: "relative",
-            }}
-          >
+          <p style={{ color: "black",position: "relative" }}>
             Upload resume
           </p>
         ) : (
           <PdfLoader url={url} beforeLoad={<Spinner />}>
             {(pdfDocument) => (
+                <div style={{pointerEvents: `${sharedButtonStatus === ButtonStatus.LOADING ? 'none' : 'unset'}`}}>
               <PdfHighlighter
                 pdfDocument={pdfDocument}
                 enableAreaSelection={(event) => event.altKey}
@@ -299,9 +295,10 @@ const App = () => {
                   );
                 }}
                 highlights={highlights}
-              />
+              />                </div>
+
             )}
-          </PdfLoader>
+              </PdfLoader>
         )}
       </div>
     </div>
