@@ -34,13 +34,21 @@ const App = () => {
   const [status, setStatus] = useState("");
 
   const onResetHighlightsClicked = () => {
+    resetHighlightsAndHash();
+    synchronizeHighlights([]);
+  };
+
+  const resetHighlightsAndHash = () => {
     setHighlights([]);
     resetHash();
   };
 
   const onPdfUploaded = (e: any) => {
     const files = e.target.files;
-    if (files.length > 0) setUrl(URLwithStore.createObjectURL(files[0]));
+    if (files.length > 0) {
+      setUrl(URLwithStore.createObjectURL(files[0]));
+      resetHighlightsAndHash();
+    }
   };
 
   const onShareClicked = async () => {
@@ -124,7 +132,8 @@ const App = () => {
       const id = document.location.pathname.slice(1);
 
       const updates = {
-        [`/resumes/${id}/comments`]: { ...newHighlights },
+        [`/resumes/${id}/comments`]:
+          newHighlights.length == 0 ? null : { ...newHighlights },
       };
 
       try {
