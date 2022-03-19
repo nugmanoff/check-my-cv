@@ -7,6 +7,7 @@ interface Props {
   resetHighlights: () => void;
   onPdfUploaded: (changeEvent: any) => void;
   onShareClicked: () => void;
+  isShareHidden: boolean;
 }
 
 const updateHash = (highlight: IHighlight) => {
@@ -19,6 +20,7 @@ export function Sidebar({
   resetHighlights,
   onShareClicked,
   onPdfUploaded,
+  isShareHidden,
 }: Props) {
   return (
     <div className="sidebar" style={{ width: "25vw" }}>
@@ -41,7 +43,7 @@ export function Sidebar({
         }}
       >
         <input type="file" accept=".pdf" onChange={onPdfUploaded} />
-        <button onClick={onShareClicked}>Share</button>
+        {!isShareHidden && <button onClick={onShareClicked}>Share</button>}
         <small>{status}</small>
       </div>
       <ul className="sidebar__highlights" style={{ listStyle: "none" }}>

@@ -187,6 +187,7 @@ const App = () => {
         resetHighlights={onResetHighlightsClicked}
         onPdfUploaded={onPdfUploaded}
         onShareClicked={onShareClicked}
+        isShareHidden={url === ""}
       />
       <div
         style={{
