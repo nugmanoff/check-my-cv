@@ -14,7 +14,13 @@ import { Sidebar } from "./Sidebar";
 import { HighlightPopup } from "./HighlightPopup";
 import { database, storage, storageRef } from "utils/firebase";
 import { getDownloadURL, uploadBytes } from "firebase/storage";
-import { get, ref as databaseRef, set, update, remove } from "firebase/database";
+import {
+  get,
+  ref as databaseRef,
+  set,
+  update,
+  remove,
+} from "firebase/database";
 
 import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
@@ -36,7 +42,6 @@ const App = () => {
 
   const onResetHighlightsClicked = () => {
     resetHighlightsAndHash();
-    synchronizeHighlights([]);
   };
 
   const resetHighlightsAndHash = () => {
@@ -93,19 +98,21 @@ const App = () => {
   const getResumeIfAny = useCallback(async () => {
     if (document.location.pathname !== "/") {
       const id = document.location.pathname.slice(1);
-      setResumeId(id);
+
       try {
         const result = await get(databaseRef(database, `resumes/${id}`));
         if (result.exists()) {
           let resume = result.val();
           setUrl(resume.fileUrl);
-
-          resume.comments = resume?.comments ? resume?.comments.map((comment: any) => {
-            if (!comment.position.hasOwnProperty("rects")) {
-              comment.position["rects"] = [];
-              return comment;
-            } else return comment;
-          }) : [];
+          setResumeId(id);
+          resume.comments = resume?.comments
+            ? resume?.comments.map((comment: any) => {
+                if (!comment.position.hasOwnProperty("rects")) {
+                  comment.position["rects"] = [];
+                  return comment;
+                } else return comment;
+              })
+            : [];
 
           setHighlights(resume.comments ?? []);
         } else {
@@ -126,23 +133,27 @@ const App = () => {
   }, [highlights]);
 
   useEffect(() => {
+    synchronizeHighlights(highlights);
+  }, [highlights]);
+
+  useEffect(() => {
     getResumeIfAny().then();
   }, [getResumeIfAny]);
 
   const synchronizeHighlights = async (newHighlights: NewHighlight[]) => {
-    if(resumeId !== "") {
-
+    if (resumeId !== "") {
       const updates = {
         [`/resumes/${resumeId}/comments`]: { ...newHighlights },
       };
       try {
-        if (newHighlights.length == 0){
-
-          const databaseWriteResult = await remove(databaseRef(database, `/resumes/${resumeId}/comments`))
+        if (newHighlights.length == 0) {
+          const databaseWriteResult = await remove(
+            databaseRef(database, `/resumes/${resumeId}/comments`)
+          );
         } else {
           const databaseWriteResult = await update(
-              databaseRef(database),
-              updates
+            databaseRef(database),
+            updates
           );
         }
       } catch {
@@ -161,7 +172,7 @@ const App = () => {
         { ...highlight, id: generateCommentId() },
         ...prevState,
       ];
-      synchronizeHighlights(newHighlights);
+
       return newHighlights;
     });
   };
@@ -189,7 +200,6 @@ const App = () => {
     });
 
     setHighlights(newHighlights);
-    synchronizeHighlights(newHighlights);
   };
 
   return (
