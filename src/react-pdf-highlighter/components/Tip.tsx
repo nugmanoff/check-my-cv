@@ -68,9 +68,9 @@ export class Tip extends Component<Props, State> {
                   }
                 }}
               />
-              <div>
+              <div className={"Tip__reactions"}>
                 {["💩", "😱", "😍", "🔥", "😳", "⚠️"].map((_emoji) => (
-                  <label key={_emoji}>
+                  <label key={_emoji} className={"Tip__label"}>
                     <input
                       checked={emoji === _emoji}
                       type="radio"

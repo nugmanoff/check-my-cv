@@ -7,6 +7,37 @@ body {
   color: #fff;
 }
 
+.Tip{
+  width: 110%;
+}
+
+.Tip__card {
+  width: 100%;
+}
+
+.Tip__label {
+  display: flex;
+  align-items: center;
+  column-gap: 3px;
+}
+
+.Tip__card textarea {
+  padding: 10px;
+  width: 100%;
+}
+
+.Tip__card input[type="submit"] {
+  border-radius: 5px;
+  padding: 5px 10px 5px 10px;
+}
+
+.Tip__reactions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 20px;
+}
+
 .sidebar {
   overflow: auto;
   color: rgb(119, 119, 119);
