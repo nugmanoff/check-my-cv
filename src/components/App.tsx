@@ -90,6 +90,7 @@ const App = () => {
 
   const scrollToHighlightFromHash = () => {
     const highlight = getHighlightById(parseIdFromHash());
+    console.log("highlight", highlight);
     if (highlight) {
       scrollViewerTo(highlight);
     }
@@ -128,7 +129,7 @@ const App = () => {
   useEffect(() => {
     window.addEventListener("hashchange", scrollToHighlightFromHash, false);
     return () => {
-      document.removeEventListener("hashchange", scrollToHighlightFromHash);
+      window.removeEventListener("hashchange", scrollToHighlightFromHash);
     };
   }, [highlights]);
 
