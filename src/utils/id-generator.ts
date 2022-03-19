@@ -5,8 +5,9 @@ const alphabet =
 const idLength = 9;
 const nanoid = customAlphabet(alphabet, idLength);
 
-const generateId = () => {
+export const generateResumeId = () => {
   return nanoid();
 };
 
-export default generateId;
+export const generateCommentId = () => String(Math.random()).slice(2);
+

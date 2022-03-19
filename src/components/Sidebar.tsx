@@ -1,5 +1,5 @@
 import React from "react";
-import type { IHighlight } from "./react-pdf-highlighter/index";
+import type { IHighlight } from "react-pdf-highlighter/";
 
 interface Props {
   status: string;
