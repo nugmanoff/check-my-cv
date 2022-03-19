@@ -18,7 +18,7 @@ export const Button = (props: any) => {
       onClick={onClick}
       isDisabled={ButtonStatus.SUCCESS == status}
     >
-      {ButtonStatus.SUCCESS == status ? "SUCCESS" : children}
+      {ButtonStatus.SUCCESS == status ? "Success!" : children}
     </ChakraButton>
   );
 };

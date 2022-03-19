@@ -1,6 +1,12 @@
 import type { IHighlight } from "react-pdf-highlighter/";
 import { Button, ButtonStatus } from "./Button";
-import { Kbd, Heading, Text, Link } from "@chakra-ui/react";
+import {
+  Kbd,
+  Heading,
+  Text,
+  Link,
+  Button as ChakraButton,
+} from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 interface Props {
@@ -56,14 +62,17 @@ export function Sidebar({
           flexDirection: "column",
         }}
       >
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={(e) => {
-            onPdfUploaded(e);
-            setSharedButtonStatus(ButtonStatus.NORMAL);
-          }}
-        />
+        {!isShareHidden && (
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={(e) => {
+              const files = e.target.files;
+              files && onPdfUploaded(files[0]);
+              setSharedButtonStatus(ButtonStatus.NORMAL);
+            }}
+          />
+        )}
         {!isShareHidden && (
           <Button onClick={onShareButtonClick} status={sharedButtonStatus}>
             Share
@@ -110,7 +119,13 @@ export function Sidebar({
       </ul>
       {highlights.length > 0 ? (
         <div style={{ padding: "1rem" }}>
-          <button onClick={resetHighlights}>Reset highlights</button>
+          <ChakraButton
+            colorScheme="teal"
+            variant="outline"
+            onClick={resetHighlights}
+          >
+            Reset highlights
+          </ChakraButton>
         </div>
       ) : null}
     </div>

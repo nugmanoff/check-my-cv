@@ -27,6 +27,7 @@ import URLwithStore from "utils/url-extensions";
 import "style/App.css";
 import { ButtonStatus } from "./Button";
 import { Kbd, Heading, Text } from "@chakra-ui/react";
+import Dropzone from "./Dropzone";
 
 let scrollViewerTo = (highlight: IHighlight) => {};
 
@@ -55,10 +56,9 @@ const App = () => {
     resetHash();
   };
 
-  const onPdfUploaded = (e: any) => {
-    const files = e.target.files;
-    if (files.length > 0) {
-      setUrl(URLwithStore.createObjectURL(files[0]));
+  const onPdfUploaded = (file: any) => {
+    if (file) {
+      setUrl(URLwithStore.createObjectURL(file));
       resetHighlightsAndHash();
     }
   };
@@ -227,9 +227,7 @@ const App = () => {
               height: "100vh",
             }}
           >
-            <Heading as="h2" size="xl">
-              Upload resume
-            </Heading>
+            <Dropzone onFileAccepted={onPdfUploaded} />
           </div>
         ) : (
           <PdfLoader url={url} beforeLoad={<Spinner />}>
