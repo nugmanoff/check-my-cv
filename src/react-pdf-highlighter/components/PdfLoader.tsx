@@ -6,7 +6,6 @@ import type { PDFDocumentProxy } from "pdfjs-dist";
 interface Props {
   /** See `GlobalWorkerOptionsType`. */
   workerSrc: string;
-
   url: string;
   beforeLoad: JSX.Element;
   errorMessage?: JSX.Element;

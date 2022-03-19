@@ -2,9 +2,11 @@ import React from "react";
 import type { IHighlight } from "./react-pdf-highlighter/index";
 
 interface Props {
+  status: string;
   highlights: Array<IHighlight>;
   resetHighlights: () => void;
-  toggleDocument: () => void;
+  onPdfUploaded: (changeEvent: any) => void;
+  onShareClicked: () => void;
 }
 
 const updateHash = (highlight: IHighlight) => {
@@ -12,15 +14,16 @@ const updateHash = (highlight: IHighlight) => {
 };
 
 export function Sidebar({
+  status,
   highlights,
-  toggleDocument,
   resetHighlights,
+  onShareClicked,
+  onPdfUploaded,
 }: Props) {
   return (
     <div className="sidebar" style={{ width: "25vw" }}>
       <div className="description" style={{ padding: "1rem" }}>
         <h2 style={{ marginBottom: "1rem" }}>Check My Resume</h2>
-
         <p>
           <small>
             To create area highlight hold ⌥ Option key (Alt), then click and
@@ -28,8 +31,20 @@ export function Sidebar({
           </small>
         </p>
       </div>
-
-      <ul className="sidebar__highlights">
+      <div
+        className="buttons"
+        style={{
+          display: "flex",
+          padding: "16px",
+          rowGap: "16px",
+          flexDirection: "column",
+        }}
+      >
+        <input type="file" accept=".pdf" onChange={onPdfUploaded} />
+        <button onClick={onShareClicked}>Share</button>
+        <small>{status}</small>
+      </div>
+      <ul className="sidebar__highlights" style={{ listStyle: "none" }}>
         {highlights.map((highlight, index) => (
           <li
             key={index}
@@ -40,11 +55,11 @@ export function Sidebar({
           >
             <div>
               <strong>{highlight.comment.text}</strong>
-              {highlight.content.text ? (
+              {highlight.content.text && (
                 <blockquote style={{ marginTop: "0.5rem" }}>
                   {`${highlight.content.text.slice(0, 90).trim()}…`}
                 </blockquote>
-              ) : null}
+              )}
               {highlight.content.image ? (
                 <div
                   className="highlight__image"

@@ -1,0 +1,32 @@
+[debug] [2022-03-19T04:23:21.521Z] ----------------------------------------------------------------------
+[debug] [2022-03-19T04:23:21.522Z] Command:       /usr/local/bin/firebase /Users/macbookpro/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase emulators:start --debug
+[debug] [2022-03-19T04:23:21.522Z] CLI Version:   10.4.0
+[debug] [2022-03-19T04:23:21.522Z] Platform:      darwin
+[debug] [2022-03-19T04:23:21.522Z] Node Version:  v12.18.1
+[debug] [2022-03-19T04:23:21.525Z] Time:          Sat Mar 19 2022 10:23:21 GMT+0600 (East Kazakhstan Time)
+[debug] [2022-03-19T04:23:21.525Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-03-19T04:23:21.579Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-03-19T04:23:21.580Z] > authorizing via signed-in user (a.nugmanoff@gmail.com)
+[info] i  emulators: Starting emulators: database, hosting, storage {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: database, hosting, storage"}}
+[debug] [2022-03-19T04:23:21.595Z] [hub] writing locator at /var/folders/30/pwf8h79s5ksfrpqf7mn773ph0000gn/T/hub-check-resume.json
+[debug] [2022-03-19T04:23:21.603Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/check-resume [none]
+[debug] [2022-03-19T04:23:22.773Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/check-resume 200
+[debug] [2022-03-19T04:23:22.774Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/check-resume {"projectId":"check-resume","projectNumber":"167178008459","displayName":"check-resume","name":"projects/check-resume","resources":{"hostingSite":"check-resume","realtimeDatabaseInstance":"check-resume-default-rtdb","storageBucket":"check-resume.appspot.com","locationId":"asia-east2"},"state":"ACTIVE"}
+[debug] [2022-03-19T04:23:22.775Z] database rules config:  [{"instance":"check-resume-default-rtdb","rules":"/Users/macbookpro/workspace/check-my-cv/database.rules.json"}]
+[debug] [2022-03-19T04:23:22.781Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2022-03-19T04:23:22.782Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2022-03-19T04:23:22.783Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2022-03-19T04:23:22.783Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","/Users/macbookpro/.cache/firebase/emulators/firebase-database-emulator-v4.7.3.jar","--host","localhost","--port",9000],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"/Users/macbookpro/.cache/firebase/emulators/firebase-database-emulator-v4.7.3.jar\",\"--host\",\"localhost\",\"--port\",9000],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[debug] [2022-03-19T04:23:22.823Z] The operation couldn’t be completed. Unable to locate a Java Runtime.
+Please visit http://www.java.com for information on installing Java.
+
+ {"metadata":{"emulator":{"name":"database"},"message":"The operation couldn’t be completed. Unable to locate a Java Runtime.\nPlease visit http://www.java.com for information on installing Java.\n\n"}}
+[warn] ⚠  database: Fatal error occurred: 
+   Database Emulator has exited with code: 1, 
+   stopping all running emulators {"metadata":{"emulator":{"name":"database"},"message":"Fatal error occurred: \n   Database Emulator has exited with code: 1, \n   stopping all running emulators"}}
+[info] i  database: Stopping Database Emulator {"metadata":{"emulator":{"name":"database"},"message":"Stopping Database Emulator"}}
+[debug] [2022-03-19T04:23:26.829Z] Database Emulator: Unable to terminate process (PID=52468) {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator: Unable to terminate process (PID=52468)"}}
+[warn] ⚠  database: Error stopping Database Emulator {"metadata":{"emulator":{"name":"database"},"message":"Error stopping Database Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
