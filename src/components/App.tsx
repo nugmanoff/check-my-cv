@@ -75,10 +75,7 @@ const App = () => {
   let scrollViewerTo = (highlight: any) => {};
 
   const scrollToHighlightFromHash = () => {
-    // let id = '6255663221315289'
     const highlight = getHighlightById(parseIdFromHash());
-    // const highlight = getHighlightById(id);
-    console.log(highlight, "highlught found");
     if (highlight) {
       scrollViewerTo(highlight);
     }
@@ -88,13 +85,10 @@ const App = () => {
     if (document.location.pathname !== "/") {
       const id = document.location.pathname.slice(1);
       try {
-        console.log("request made");
         const result = await get(databaseRef(database, `resumes/${id}`));
-        console.log("request done", result);
         if (result.exists()) {
           let resume = result.val();
           setUrl(resume.fileUrl);
-          console.log(resume);
 
           resume.comments = resume?.comments.map((comment: any) => {
             if (!comment.position.hasOwnProperty("rects")) {
@@ -145,12 +139,10 @@ const App = () => {
   };
 
   const getHighlightById = (id: string) => {
-    console.log(highlights);
     return highlights.find((highlight) => highlight.id === id);
   };
 
   const addHighlight = (highlight: NewHighlight) => {
-    console.log("Saving highlight", highlight, highlights);
     setHighlights((prevState) => {
       let newHighlights = [
         { ...highlight, id: generateCommentId() },
@@ -161,15 +153,11 @@ const App = () => {
     });
   };
 
-  console.log(highlights);
-
   const updateHighlight = (
     highlightId: string,
     position: Object,
     content: Object
   ) => {
-    console.log("Updating highlight", highlightId, position, content);
-
     const newHighlights = highlights.map((h) => {
       const {
         id,
@@ -223,10 +211,8 @@ const App = () => {
                 pdfDocument={pdfDocument}
                 enableAreaSelection={(event) => event.altKey}
                 onScrollChange={resetHash}
-                // pdfScaleValue="page-width"
                 scrollRef={(scrollTo) => {
                   scrollViewerTo = scrollTo;
-                  console.log(scrollTo, "scroll to in scroll ref");
                   scrollToHighlightFromHash();
                 }}
                 onSelectionFinished={(
