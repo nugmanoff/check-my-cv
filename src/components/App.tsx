@@ -9,7 +9,6 @@ import {
   Popup,
   Tip,
 } from "react-pdf-highlighter/";
-import { Spinner } from "./Spinner";
 import { Sidebar } from "./Sidebar";
 import { HighlightPopup } from "./HighlightPopup";
 import { database, storage, storageRef } from "utils/firebase";
@@ -26,7 +25,7 @@ import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
 import "style/App.css";
 import { ButtonStatus } from "./Button";
-import { Kbd, Heading, Text } from "@chakra-ui/react";
+import { Kbd, Heading, Text, Spinner, Center } from "@chakra-ui/react";
 import Dropzone from "./Dropzone";
 
 let scrollViewerTo = (highlight: IHighlight) => {};
@@ -230,7 +229,20 @@ const App = () => {
             <Dropzone onFileAccepted={onPdfUploaded} />
           </div>
         ) : (
-          <PdfLoader url={url} beforeLoad={<Spinner />}>
+          <PdfLoader
+            url={url}
+            beforeLoad={
+              <Center h="100%" w="100%">
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="teal.500"
+                  size="xl"
+                />
+              </Center>
+            }
+          >
             {(pdfDocument) => (
               <div
                 style={{
