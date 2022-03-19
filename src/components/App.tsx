@@ -25,7 +25,15 @@ import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
 import "style/App.css";
 import { ButtonStatus } from "./Button";
-import { Kbd, Heading, Text, Spinner, Center } from "@chakra-ui/react";
+import {
+  Kbd,
+  Heading,
+  Text,
+  Spinner,
+  Center,
+  Stack,
+  VStack,
+} from "@chakra-ui/react";
 import Dropzone from "./Dropzone";
 
 let scrollViewerTo = (highlight: IHighlight) => {};
@@ -225,13 +233,16 @@ const App = () => {
         {url === "" ? (
           isLoading ? (
             <Center h="100%" w="100%">
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="teal.500"
-                size="xl"
-              />
+              <VStack>
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="teal.500"
+                  size="xl"
+                />
+                <Text fontSize="lg">Resume is being loaded...</Text>
+              </VStack>
             </Center>
           ) : (
             <div
@@ -250,13 +261,16 @@ const App = () => {
             url={url}
             beforeLoad={
               <Center h="100%" w="100%">
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="teal.500"
-                  size="xl"
-                />
+                <VStack>
+                  <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="teal.500"
+                    size="xl"
+                  />
+                  <Text fontSize="lg">Resume is being loaded...</Text>
+                </VStack>
               </Center>
             }
           >
