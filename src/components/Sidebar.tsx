@@ -1,6 +1,7 @@
 import type { IHighlight } from "react-pdf-highlighter/";
 import { Button, ButtonStatus } from "./Button";
-import { Kbd, Heading, Text } from "@chakra-ui/react";
+import { Kbd, Heading, Text, Link } from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 interface Props {
   status: string;
@@ -68,7 +69,13 @@ export function Sidebar({
             Share
           </Button>
         )}
-        <small>{status}</small>
+        {sharedButtonStatus == ButtonStatus.SUCCESS ? (
+          <Link href={status} isExternal>
+            {status} <ExternalLinkIcon mx="2px" />
+          </Link>
+        ) : (
+          <Text fontSize="sm">{status}</Text>
+        )}
       </div>
       <ul className="sidebar__highlights" style={{ listStyle: "none" }}>
         {highlights.map((highlight, index) => (
