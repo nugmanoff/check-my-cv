@@ -14,7 +14,7 @@ import { Sidebar } from "./Sidebar";
 import { HighlightPopup } from "./HighlightPopup";
 import { database, storage, storageRef } from "utils/firebase";
 import { getDownloadURL, uploadBytes } from "firebase/storage";
-import { get, ref as databaseRef, set, update } from "firebase/database";
+import { get, ref as databaseRef, set, update, remove } from "firebase/database";
 
 import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
@@ -32,6 +32,7 @@ const App = () => {
   const [url, setUrl] = useState("");
   const [highlights, setHighlights] = useState([] as IHighlight[]);
   const [status, setStatus] = useState("");
+  const [resumeId, setResumeId] = useState("");
 
   const onResetHighlightsClicked = () => {
     resetHighlightsAndHash();
@@ -74,9 +75,9 @@ const App = () => {
         comments: highlights,
       }
     );
-
+    setResumeId(id);
     setStatus(
-      `Share link generated successfully: check-my-cv.vercel.app/${id}`
+      `Share link generated successfully: ${window.location.origin}/${id}`
     );
   };
 
@@ -92,18 +93,19 @@ const App = () => {
   const getResumeIfAny = useCallback(async () => {
     if (document.location.pathname !== "/") {
       const id = document.location.pathname.slice(1);
+      setResumeId(id);
       try {
         const result = await get(databaseRef(database, `resumes/${id}`));
         if (result.exists()) {
           let resume = result.val();
           setUrl(resume.fileUrl);
 
-          resume.comments = resume?.comments.map((comment: any) => {
+          resume.comments = resume?.comments ? resume?.comments.map((comment: any) => {
             if (!comment.position.hasOwnProperty("rects")) {
               comment.position["rects"] = [];
               return comment;
             } else return comment;
-          });
+          }) : [];
 
           setHighlights(resume.comments ?? []);
         } else {
@@ -128,19 +130,21 @@ const App = () => {
   }, [getResumeIfAny]);
 
   const synchronizeHighlights = async (newHighlights: NewHighlight[]) => {
-    if (document.location.pathname !== "/") {
-      const id = document.location.pathname.slice(1);
+    if(resumeId !== "") {
 
       const updates = {
-        [`/resumes/${id}/comments`]:
-          newHighlights.length == 0 ? null : { ...newHighlights },
+        [`/resumes/${resumeId}/comments`]: { ...newHighlights },
       };
-
       try {
-        const databaseWriteResult = await update(
-          databaseRef(database),
-          updates
-        );
+        if (newHighlights.length == 0){
+
+          const databaseWriteResult = await remove(databaseRef(database, `/resumes/${resumeId}/comments`))
+        } else {
+          const databaseWriteResult = await update(
+              databaseRef(database),
+              updates
+          );
+        }
       } catch {
         console.log("error occurred while syncing");
       }
