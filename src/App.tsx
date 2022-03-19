@@ -27,10 +27,7 @@ import {
 
 import generateId from "./id-generator";
 import URLwithStore from "./url-extensions";
-
 import "./style/App.css";
-
-const testHighlights: Record<string, Array<IHighlight>> = _testHighlights;
 
 interface State {
   url: string;
@@ -128,7 +125,8 @@ class App extends Component<{}, State> {
         } else {
           document.location.pathname = "/";
         }
-      } catch {
+      } catch (error) {
+        console.error("error occurred", error);
         document.location.pathname = "/";
       }
     }
@@ -184,34 +182,42 @@ class App extends Component<{}, State> {
 
     console.log("Saving highlight", highlight);
 
-    this.setState({
-      highlights: [{ ...highlight, id: getNextId() }, ...highlights],
-    });
-    this.synchronizeHighlights();
+    this.setState(
+      {
+        highlights: [{ ...highlight, id: getNextId() }, ...highlights],
+      },
+      () => {
+        this.synchronizeHighlights();
+      }
+    );
   }
 
   updateHighlight(highlightId: string, position: Object, content: Object) {
     console.log("Updating highlight", highlightId, position, content);
 
-    this.setState({
-      highlights: this.state.highlights.map((h) => {
-        const {
-          id,
-          position: originalPosition,
-          content: originalContent,
-          ...rest
-        } = h;
-        return id === highlightId
-          ? {
-              id,
-              position: { ...originalPosition, ...position },
-              content: { ...originalContent, ...content },
-              ...rest,
-            }
-          : h;
-      }),
-    });
-    this.synchronizeHighlights();
+    this.setState(
+      {
+        highlights: this.state.highlights.map((h) => {
+          const {
+            id,
+            position: originalPosition,
+            content: originalContent,
+            ...rest
+          } = h;
+          return id === highlightId
+            ? {
+                id,
+                position: { ...originalPosition, ...position },
+                content: { ...originalContent, ...content },
+                ...rest,
+              }
+            : h;
+        }),
+      },
+      () => {
+        this.synchronizeHighlights();
+      }
+    );
   }
 
   render() {
