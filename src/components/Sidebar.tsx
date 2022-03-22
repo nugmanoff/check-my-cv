@@ -11,6 +11,7 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import CommentCard from "./CommentCard";
 
 interface Props {
   status: string;
@@ -128,25 +129,10 @@ export function Sidebar({
                 updateHash(highlight);
               }}
             >
-              <div>
-                <strong>{highlight.comment.text}</strong>
-                {highlight.content.text && (
-                  <blockquote style={{ marginTop: "0.5rem" }}>
-                    {`${highlight.content.text.slice(0, 90).trim()}…`}
-                  </blockquote>
-                )}
-                {highlight.content.image ? (
-                  <div
-                    className="highlight__image"
-                    style={{ marginTop: "0.5rem" }}
-                  >
-                    <img src={highlight.content.image} alt={"Screenshot"} />
-                  </div>
-                ) : null}
-              </div>
-              <div className="highlight__location">
-                Page {highlight.position.pageNumber}
-              </div>
+              <CommentCard
+                name={highlight.comment.text}
+                description={highlight.comment.text}
+              />
             </li>
           ))}
         </ul>

@@ -7,7 +7,7 @@ body {
   color: #fff;
 }
 
-.Tip{
+.Tip {
   width: 110%;
 }
 
@@ -69,14 +69,14 @@ body {
 }
 
 .sidebar__highlight {
-  padding: 1rem;
+  padding: 0.5rem;
   cursor: pointer;
   transition: background 140ms ease-in;
-  border-bottom: 1px solid rgb(119, 119, 119);
+  /* border-bottom: 1px solid rgb(119, 119, 119); */
 }
 
 .sidebar__highlight:hover {
-  background: rgba(58, 56, 52, 0.08);
+  /* background: rgba(58, 56, 52, 0.08); */
 }
 
 a {
