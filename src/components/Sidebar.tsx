@@ -1,6 +1,6 @@
 import type { IHighlight } from "react-pdf-highlighter/";
 import { ShareButton } from "./ShareButton";
-import { Kbd, Heading, Text, Link, Button } from "@chakra-ui/react";
+import { Kbd, Heading, Text, Link } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import CommentCard from "./CommentCard";
 import { CommentListSkeleton } from "./CommentListSkeleton";
@@ -115,6 +115,18 @@ const Sidebar = ({
       <HeadingAndDescription />
       <BrowseAndShare />
       <CommentList />
+      <div className="sidebar__proudly-created">
+        <Text as="sup">
+          🚀 Brocrafted by&nbsp;
+          <Link color="teal.500" href="https://github.com/nugmanoff">
+            Aidar&nbsp;
+          </Link>
+          &
+          <Link color="teal.500" href="https://github.com/murattishkul">
+            &nbsp;Mura
+          </Link>
+        </Text>
+      </div>
     </div>
   );
 };
