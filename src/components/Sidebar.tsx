@@ -6,12 +6,10 @@ import {
   Text,
   Link,
   Button as ChakraButton,
-  Skeleton,
-  Stack,
-  SkeletonText,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import CommentCard from "./CommentCard";
+import { CommentListSkeleton } from "./CommentListSkeleton";
 
 interface Props {
   status: string;
@@ -29,7 +27,7 @@ const updateHash = (highlight: IHighlight) => {
   document.location.hash = `highlight-${highlight.id}`;
 };
 
-export function Sidebar({
+const Sidebar = ({
   status,
   highlights,
   resetHighlights,
@@ -39,26 +37,42 @@ export function Sidebar({
   sharedButtonStatus,
   setSharedButtonStatus,
   isLoading,
-}: Props) {
+}: Props) => {
   const onShareButtonClick = async () => {
     setSharedButtonStatus(ButtonStatus.LOADING);
     await onShareClicked();
     setSharedButtonStatus(ButtonStatus.SUCCESS);
   };
-  return (
-    <div className="sidebar" style={{ width: "25vw" }}>
-      <div className="description" style={{ padding: "1rem" }}>
-        <Heading as="h2" size="xl">
-          Check Resume
-        </Heading>
-        <Text fontSize="lg">
-          To create area highlight hold&nbsp;
-          <span>
-            <Kbd>⌥ Option (Alt)</Kbd>
-          </span>
-          , then click and drag.
-        </Text>
+
+  const CommentsSection = () => {
+    return (
+      <div>
+        {isLoading ? (
+          <CommentListSkeleton />
+        ) : (
+          <ul className="sidebar__highlights" style={{ listStyle: "none" }}>
+            {highlights.map((highlight, index) => (
+              <li
+                key={index}
+                className="sidebar__highlight"
+                onClick={() => {
+                  updateHash(highlight);
+                }}
+              >
+                <CommentCard
+                  name={highlight.comment.text}
+                  description={highlight.comment.text}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
+    );
+  };
+
+  const BrowseAndShareSection = () => {
+    return (
       <div
         className="buttons"
         style={{
@@ -92,62 +106,33 @@ export function Sidebar({
           <Text fontSize="sm">{status}</Text>
         )}
       </div>
-      {isLoading ? (
-        <Stack p={4} spacing={5}>
-          <Skeleton
-            height="40px"
-            borderRadius={8}
-            startColor="gray.100"
-            endColor="gray.200"
-          />
-          <Skeleton
-            height="120px"
-            borderRadius={8}
-            startColor="gray.100"
-            endColor="gray.200"
-          />
-          <Skeleton
-            height="120px"
-            borderRadius={8}
-            startColor="gray.100"
-            endColor="gray.200"
-          />
-          <Skeleton
-            height="120px"
-            borderRadius={8}
-            startColor="gray.100"
-            endColor="gray.200"
-          />
-        </Stack>
-      ) : (
-        <ul className="sidebar__highlights" style={{ listStyle: "none" }}>
-          {highlights.map((highlight, index) => (
-            <li
-              key={index}
-              className="sidebar__highlight"
-              onClick={() => {
-                updateHash(highlight);
-              }}
-            >
-              <CommentCard
-                name={highlight.comment.text}
-                description={highlight.comment.text}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-      {highlights.length > 0 ? (
-        <div style={{ padding: "1rem" }}>
-          <ChakraButton
-            colorScheme="teal"
-            variant="outline"
-            onClick={resetHighlights}
-          >
-            Reset highlights
-          </ChakraButton>
-        </div>
-      ) : null}
+    );
+  };
+
+  const HeadingAndDescription = () => {
+    return (
+      <div className="description" style={{ padding: "1rem" }}>
+        <Heading as="h2" size="xl">
+          Check Resume
+        </Heading>
+        <Text fontSize="lg">
+          To create area highlight hold&nbsp;
+          <span>
+            <Kbd>⌥ Option (Alt)</Kbd>
+          </span>
+          , then click and drag.
+        </Text>
+      </div>
+    );
+  };
+
+  return (
+    <div className="sidebar" style={{ width: "25vw" }}>
+      <HeadingAndDescription />
+      <BrowseAndShareSection />
+      <CommentsSection />
     </div>
   );
-}
+};
+
+export { Sidebar };
