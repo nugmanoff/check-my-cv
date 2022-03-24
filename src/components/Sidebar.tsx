@@ -39,17 +39,17 @@ const Sidebar = ({
     setSharedButtonStatus(ShareButtonStatus.SUCCESS);
   };
 
-  const CommentsSection = () => {
+  const CommentList = () => {
     return (
       <div>
         {isLoading ? (
           <CommentListSkeleton />
         ) : (
-          <ul className="sidebar__highlights" style={{ listStyle: "none" }}>
+          <ul className="sidebar__comment-list">
             {highlights.map((highlight, index) => (
               <li
                 key={index}
-                className="sidebar__highlight"
+                className="sidebar__comment"
                 onClick={() => {
                   updateHash(highlight);
                 }}
@@ -66,17 +66,9 @@ const Sidebar = ({
     );
   };
 
-  const BrowseAndShareSection = () => {
+  const BrowseAndShare = () => {
     return (
-      <div
-        className="buttons"
-        style={{
-          display: "flex",
-          padding: "16px",
-          rowGap: "16px",
-          flexDirection: "column",
-        }}
-      >
+      <div className="sidebar__browse-and-share">
         {!isShareHidden && (
           <input
             type="file"
@@ -106,7 +98,7 @@ const Sidebar = ({
 
   const HeadingAndDescription = () => {
     return (
-      <div className="description" style={{ padding: "1rem" }}>
+      <div>
         <Heading as="h2" size="xl">
           Check Resume
         </Heading>
@@ -122,10 +114,10 @@ const Sidebar = ({
   };
 
   return (
-    <div className="sidebar" style={{ width: "25vw" }}>
+    <div className="sidebar">
       <HeadingAndDescription />
-      <BrowseAndShareSection />
-      <CommentsSection />
+      <BrowseAndShare />
+      <CommentList />
     </div>
   );
 };

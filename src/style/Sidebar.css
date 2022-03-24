@@ -1,4 +1,6 @@
 .sidebar {
+  width: 25vw;
+  padding: 16px;
   overflow: auto;
   color: rgb(119, 119, 119);
   background: linear-gradient(
@@ -10,14 +12,19 @@
   );
 }
 
-.sidebar__highlights {
-  list-style: "none";
+.sidebar__browse-and-share {
+  display: flex;
+  margin-top: 16px;
+  row-gap: 16px;
+  flex-direction: column;
+}
+
+.sidebar__comment-list {
+  list-style: none;
   padding: 0;
 }
 
-.sidebar__highlight {
-  padding: 0.5rem;
+.sidebar__comment {
   cursor: pointer;
   transition: background 140ms ease-in;
-  /* border-bottom: 1px solid rgb(119, 119, 119); */
 }
