@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { IHighlight, NewHighlight } from "react-pdf-highlighter/";
 import {
@@ -24,7 +24,7 @@ import {
 import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
 import "style/App.css";
-import { ButtonStatus } from "./Button";
+import { ShareButtonStatus } from "./ShareButton";
 import {
   Kbd,
   Heading,
@@ -51,7 +51,7 @@ const App = () => {
   const [status, setStatus] = useState("");
   const [resumeId, setResumeId] = useState("");
   const [sharedButtonStatus, setSharedButtonStatus] = useState(
-    ButtonStatus.NORMAL
+    ShareButtonStatus.NORMAL
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -278,7 +278,7 @@ const App = () => {
               <div
                 style={{
                   pointerEvents: `${
-                    sharedButtonStatus === ButtonStatus.LOADING
+                    sharedButtonStatus === ShareButtonStatus.LOADING
                       ? "none"
                       : "unset"
                   }`,

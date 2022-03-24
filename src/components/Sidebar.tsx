@@ -1,15 +1,10 @@
 import type { IHighlight } from "react-pdf-highlighter/";
-import { Button, ButtonStatus } from "./Button";
-import {
-  Kbd,
-  Heading,
-  Text,
-  Link,
-  Button as ChakraButton,
-} from "@chakra-ui/react";
+import { ShareButton, ShareButtonStatus } from "./ShareButton";
+import { Kbd, Heading, Text, Link, Button } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import CommentCard from "./CommentCard";
 import { CommentListSkeleton } from "./CommentListSkeleton";
+import "style/Sidebar.css";
 
 interface Props {
   status: string;
@@ -18,8 +13,8 @@ interface Props {
   onPdfUploaded: (changeEvent: any) => void;
   onShareClicked: () => void;
   isShareHidden: boolean;
-  sharedButtonStatus: ButtonStatus;
-  setSharedButtonStatus: (status: ButtonStatus) => void;
+  sharedButtonStatus: ShareButtonStatus;
+  setSharedButtonStatus: (status: ShareButtonStatus) => void;
   isLoading: boolean;
 }
 
@@ -39,9 +34,9 @@ const Sidebar = ({
   isLoading,
 }: Props) => {
   const onShareButtonClick = async () => {
-    setSharedButtonStatus(ButtonStatus.LOADING);
+    setSharedButtonStatus(ShareButtonStatus.LOADING);
     await onShareClicked();
-    setSharedButtonStatus(ButtonStatus.SUCCESS);
+    setSharedButtonStatus(ShareButtonStatus.SUCCESS);
   };
 
   const CommentsSection = () => {
@@ -89,16 +84,16 @@ const Sidebar = ({
             onChange={(e) => {
               const files = e.target.files;
               files && onPdfUploaded(files[0]);
-              setSharedButtonStatus(ButtonStatus.NORMAL);
+              setSharedButtonStatus(ShareButtonStatus.NORMAL);
             }}
           />
         )}
         {!isShareHidden && (
-          <Button onClick={onShareButtonClick} status={sharedButtonStatus}>
+          <ShareButton onClick={onShareButtonClick} status={sharedButtonStatus}>
             Share
-          </Button>
+          </ShareButton>
         )}
-        {sharedButtonStatus == ButtonStatus.SUCCESS ? (
+        {sharedButtonStatus == ShareButtonStatus.SUCCESS ? (
           <Link href={status} isExternal>
             {status} <ExternalLinkIcon mx="2px" />
           </Link>
