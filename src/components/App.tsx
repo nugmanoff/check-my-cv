@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-
 import type { IHighlight, NewHighlight } from "react-pdf-highlighter/";
 import {
   AreaHighlight,
@@ -9,7 +8,7 @@ import {
   Popup,
   Tip,
 } from "react-pdf-highlighter/";
-import { Sidebar } from "./Sidebar";
+import { Sidebar, SidebarStatus } from "./Sidebar";
 import { HighlightPopup } from "./HighlightPopup";
 import { database, storage, storageRef } from "utils/firebase";
 import { getDownloadURL, uploadBytes } from "firebase/storage";
@@ -20,20 +19,10 @@ import {
   update,
   remove,
 } from "firebase/database";
-
 import { generateCommentId, generateResumeId } from "utils/id-generator";
 import URLwithStore from "utils/url-extensions";
 import "style/App.css";
-import { ShareButtonStatus } from "./ShareButton";
-import {
-  Kbd,
-  Heading,
-  Text,
-  Spinner,
-  Center,
-  Stack,
-  VStack,
-} from "@chakra-ui/react";
+import { Text, Spinner, Center, VStack } from "@chakra-ui/react";
 import Dropzone from "./Dropzone";
 
 let scrollViewerTo = (highlight: IHighlight) => {};
@@ -48,16 +37,9 @@ const resetHash = () => {
 const App = () => {
   const [url, setUrl] = useState("");
   const [highlights, setHighlights] = useState([] as IHighlight[]);
-  const [status, setStatus] = useState("");
+  const [statusText, setStatusText] = useState("");
   const [resumeId, setResumeId] = useState("");
-  const [sharedButtonStatus, setSharedButtonStatus] = useState(
-    ShareButtonStatus.NORMAL
-  );
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onResetHighlightsClicked = () => {
-    resetHighlightsAndHash();
-  };
+  const [sidebarStatus, setSidebarStatus] = useState(SidebarStatus.CAN_UPLOAD);
 
   const resetHighlightsAndHash = () => {
     setHighlights([]);
@@ -68,6 +50,9 @@ const App = () => {
     if (file) {
       setUrl(URLwithStore.createObjectURL(file));
       resetHighlightsAndHash();
+      setSidebarStatus(SidebarStatus.UPLOADED);
+    } else {
+      setSidebarStatus(SidebarStatus.CAN_UPLOAD);
     }
   };
 
@@ -76,16 +61,17 @@ const App = () => {
     const ref = storageRef(storage, id);
     const file = URLwithStore.getFromObjectURL(url);
     const metadata = { contentType: "application/pdf" };
+    setSidebarStatus(SidebarStatus.SHARING_IN_PROGRESS);
 
-    setStatus("Uploading file...");
+    setStatusText("Uploading file...");
 
     const fileUploadResult = await uploadBytes(ref, file, metadata);
 
-    setStatus("Constructing download URL...");
+    setStatusText("Constructing download URL...");
 
     const fileUrl = await getDownloadURL(fileUploadResult.ref);
 
-    setStatus("Saving link...");
+    setStatusText("Saving link...");
 
     const databaseWriteResult = await set(
       databaseRef(database, "resumes/" + id),
@@ -95,7 +81,8 @@ const App = () => {
       }
     );
     setResumeId(id);
-    setStatus(`${window.location.origin}/${id}`);
+    setStatusText(`${window.location.origin}/${id}`);
+    setSidebarStatus(SidebarStatus.SHARING_SUCCESS);
   };
 
   const scrollToHighlightFromHash = () => {
@@ -109,7 +96,8 @@ const App = () => {
   const getResumeIfAny = useCallback(async () => {
     if (document.location.pathname !== "/") {
       const id = document.location.pathname.slice(1);
-      setIsLoading(true);
+      setSidebarStatus(SidebarStatus.LOADING);
+
       try {
         const result = await get(databaseRef(database, `resumes/${id}`));
         if (result.exists()) {
@@ -126,15 +114,15 @@ const App = () => {
             : [];
 
           setHighlights(resume.comments ?? []);
-          setIsLoading(false);
+          setSidebarStatus(SidebarStatus.CAN_UPLOAD);
         } else {
           document.location.pathname = "/";
-          setIsLoading(false);
+          setSidebarStatus(SidebarStatus.CAN_UPLOAD);
         }
       } catch (error) {
         console.error("error occurred", error);
         document.location.pathname = "/";
-        setIsLoading(false);
+        setSidebarStatus(SidebarStatus.CAN_UPLOAD);
       }
     }
   }, []);
@@ -219,19 +207,15 @@ const App = () => {
   return (
     <div className="App" style={{ display: "flex", height: "100vh" }}>
       <Sidebar
-        status={status}
+        status={sidebarStatus}
+        statusText={statusText}
         highlights={highlights}
-        resetHighlights={onResetHighlightsClicked}
         onPdfUploaded={onPdfUploaded}
         onShareClicked={onShareClicked}
-        isShareHidden={url === ""}
-        setSharedButtonStatus={setSharedButtonStatus}
-        sharedButtonStatus={sharedButtonStatus}
-        isLoading={isLoading}
       />
       <div style={{ height: "100vh", width: "75vw", position: "relative" }}>
         {url === "" ? (
-          isLoading ? (
+          sidebarStatus === SidebarStatus.LOADING ? (
             <Center h="100%" w="100%">
               <VStack>
                 <Spinner
@@ -278,7 +262,7 @@ const App = () => {
               <div
                 style={{
                   pointerEvents: `${
-                    sharedButtonStatus === ShareButtonStatus.LOADING
+                    sidebarStatus === SidebarStatus.SHARING_IN_PROGRESS
                       ? "none"
                       : "unset"
                   }`,

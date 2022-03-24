@@ -2,7 +2,7 @@ import { Skeleton, Stack } from "@chakra-ui/react";
 
 export const CommentListSkeleton = () => {
   return (
-    <Stack p={4} spacing={5}>
+    <Stack spacing={5}>
       <Skeleton
         height="40px"
         borderRadius={8}

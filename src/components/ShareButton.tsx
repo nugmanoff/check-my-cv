@@ -1,24 +1,19 @@
 import "style/ShareButton.css";
 import { Button } from "@chakra-ui/react";
-
-export enum ShareButtonStatus {
-  NORMAL,
-  LOADING,
-  SUCCESS,
-}
+import { SidebarStatus } from "./Sidebar";
 
 export const ShareButton = (props: any) => {
   const { status, onClick, children } = props;
 
   return (
     <Button
-      isLoading={ShareButtonStatus.LOADING == status}
+      isLoading={SidebarStatus.SHARING_IN_PROGRESS == status}
       colorScheme="teal"
       variant="solid"
       onClick={onClick}
-      isDisabled={ShareButtonStatus.SUCCESS == status}
+      isDisabled={SidebarStatus.SHARING_SUCCESS == status}
     >
-      {ShareButtonStatus.SUCCESS == status ? "Success!" : children}
+      {SidebarStatus.SHARING_SUCCESS == status ? "Success!" : children}
     </Button>
   );
 };

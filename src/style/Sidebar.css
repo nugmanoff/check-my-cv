@@ -21,6 +21,7 @@
 
 .sidebar__comment-list {
   list-style: none;
+  margin-top: 16px;
   padding: 0;
 }
 
