@@ -1,10 +1,11 @@
 import type { IHighlight } from "react-pdf-highlighter/";
 import { ShareButton } from "./ShareButton";
-import { Kbd, Heading, Text, Link } from "@chakra-ui/react";
+import { Kbd, Heading, Text, Button, Link } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import CommentCard from "./CommentCard";
 import { CommentListSkeleton } from "./CommentListSkeleton";
 import "style/Sidebar.css";
+import { LinkAndCopy } from "./LinkAndCopy";
 
 interface Props {
   status: SidebarStatus;
@@ -82,9 +83,7 @@ const Sidebar = ({
           </ShareButton>
         )}
         {status === SidebarStatus.SHARING_SUCCESS && (
-          <Link href={statusText} isExternal>
-            {statusText} <ExternalLinkIcon mx="2px" />
-          </Link>
+          <LinkAndCopy link={statusText} />
         )}
         {status === SidebarStatus.SHARING_IN_PROGRESS && (
           <Text fontSize="sm">{statusText}</Text>
@@ -119,11 +118,11 @@ const Sidebar = ({
         <Text as="sup">
           🚀 Brocrafted by&nbsp;
           <Link color="teal.500" href="https://github.com/nugmanoff">
-            Aidar&nbsp;
+            Aidar
           </Link>
-          &
+          &nbsp;&&nbsp;
           <Link color="teal.500" href="https://github.com/murattishkul">
-            &nbsp;Mura
+            Mura
           </Link>
         </Text>
       </div>

@@ -27,6 +27,14 @@
   flex-direction: column;
 }
 
+.sidebar__link-and-copy {
+  display: flex;
+  flex-direction: row;
+  align-self: space-between;
+  justify-content: space-between;
+  row-gap: 0px;
+}
+
 .sidebar__comment-list {
   list-style: none;
   margin-top: 16px;
