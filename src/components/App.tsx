@@ -168,6 +168,14 @@ const App = () => {
     return highlights.find((highlight) => highlight.id === id);
   };
 
+  const onDeleteHighlight = (highlight: IHighlight) => {
+    setHighlights((prevState) => {
+      return prevState.filter((h) => {
+        return h.id !== highlight.id;
+      });
+    });
+  };
+
   const addHighlight = (highlight: NewHighlight) => {
     setHighlights((prevState) => {
       let newHighlights = [
@@ -184,24 +192,26 @@ const App = () => {
     position: Object,
     content: Object
   ) => {
-    const newHighlights = highlights.map((h) => {
-      const {
-        id,
-        position: originalPosition,
-        content: originalContent,
-        ...rest
-      } = h;
-      return id === highlightId
-        ? {
-            id,
-            position: { ...originalPosition, ...position },
-            content: { ...originalContent, ...content },
-            ...rest,
-          }
-        : h;
-    });
+    setHighlights((prevState) => {
+      const newHighlights = prevState.map((h) => {
+        const {
+          id,
+          position: originalPosition,
+          content: originalContent,
+          ...rest
+        } = h;
+        return id === highlightId
+          ? {
+              id,
+              position: { ...originalPosition, ...position },
+              content: { ...originalContent, ...content },
+              ...rest,
+            }
+          : h;
+      });
 
-    setHighlights(newHighlights);
+      return newHighlights;
+    });
   };
 
   return (
@@ -212,6 +222,7 @@ const App = () => {
         highlights={highlights}
         onPdfUploaded={onPdfUploaded}
         onShareClicked={onShareClicked}
+        onDeleteClicked={onDeleteHighlight}
       />
       <div style={{ height: "100vh", width: "75vw", position: "relative" }}>
         {url === "" ? (

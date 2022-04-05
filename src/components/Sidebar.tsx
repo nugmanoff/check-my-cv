@@ -1,21 +1,10 @@
 import type { IHighlight } from "react-pdf-highlighter/";
 import { ShareButton } from "./ShareButton";
-import {
-  Kbd,
-  Heading,
-  Text,
-  Button,
-  Link,
-  FormControl,
-  FormErrorMessage,
-} from "@chakra-ui/react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Kbd, Heading, Text, Link } from "@chakra-ui/react";
 import CommentCard from "./CommentCard";
 import { CommentListSkeleton } from "./CommentListSkeleton";
 import "style/Sidebar.css";
 import { LinkAndCopy } from "./LinkAndCopy";
-import { FileUpload, FormValues } from "./FileUpload";
-import { useForm, UseFormRegisterReturn } from "react-hook-form";
 
 interface Props {
   status: SidebarStatus;
@@ -23,6 +12,7 @@ interface Props {
   highlights: Array<IHighlight>;
   onPdfUploaded: (changeEvent: any) => void;
   onShareClicked: () => void;
+  onDeleteClicked: (highlight: IHighlight) => void;
 }
 
 const updateHash = (highlight: IHighlight) => {
@@ -43,6 +33,7 @@ const Sidebar = ({
   highlights,
   onShareClicked,
   onPdfUploaded,
+  onDeleteClicked,
 }: Props) => {
   const CommentList = () => {
     return (
@@ -52,16 +43,16 @@ const Sidebar = ({
         ) : (
           <ul className="sidebar__comment-list">
             {highlights.map((highlight, index) => (
-              <li
-                key={index}
-                className="sidebar__comment"
-                onClick={() => {
-                  updateHash(highlight);
-                }}
-              >
+              <li key={index} className="sidebar__comment">
                 <CommentCard
-                  name={highlight.comment.text}
-                  description={highlight.comment.text}
+                  text={highlight.comment.text}
+                  onClick={() => {
+                    updateHash(highlight);
+                  }}
+                  onDelete={(e: any) => {
+                    if (e && e.stopPropagation) e.stopPropagation();
+                    onDeleteClicked(highlight);
+                  }}
                 />
               </li>
             ))}

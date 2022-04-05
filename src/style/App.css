@@ -39,7 +39,7 @@ a {
 blockquote {
   padding: 0;
   margin: 0;
-  quotes: "\201c""\201d";
+  quotes: "\201c\"\"\201d";
 }
 blockquote:before {
   content: open-quote;
