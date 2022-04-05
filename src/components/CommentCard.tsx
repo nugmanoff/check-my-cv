@@ -1,4 +1,4 @@
-import { HStack, VStack, Text, useColorModeValue, Box } from "@chakra-ui/react";
+import { HStack, VStack, Text, useColorModeValue } from "@chakra-ui/react";
 
 const CommentCard = ({ name, description, link }: any) => {
   return (

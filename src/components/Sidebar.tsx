@@ -1,11 +1,21 @@
 import type { IHighlight } from "react-pdf-highlighter/";
 import { ShareButton } from "./ShareButton";
-import { Kbd, Heading, Text, Button, Link } from "@chakra-ui/react";
+import {
+  Kbd,
+  Heading,
+  Text,
+  Button,
+  Link,
+  FormControl,
+  FormErrorMessage,
+} from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import CommentCard from "./CommentCard";
 import { CommentListSkeleton } from "./CommentListSkeleton";
 import "style/Sidebar.css";
 import { LinkAndCopy } from "./LinkAndCopy";
+import { FileUpload, FormValues } from "./FileUpload";
+import { useForm, UseFormRegisterReturn } from "react-hook-form";
 
 interface Props {
   status: SidebarStatus;
@@ -98,6 +108,18 @@ const Sidebar = ({
         <Heading as="h2" size="xl">
           Check Resume
         </Heading>
+        <div>
+          <Text as="sup">
+            🚀 Brocrafted by&nbsp;
+            <Link color="teal.500" href="https://github.com/nugmanoff">
+              Aidar
+            </Link>
+            &nbsp;&&nbsp;
+            <Link color="teal.500" href="https://github.com/murattishkul">
+              Mura
+            </Link>
+          </Text>
+        </div>
         <Text fontSize="lg">
           To create area highlight hold&nbsp;
           <span>
@@ -112,20 +134,9 @@ const Sidebar = ({
   return (
     <div className="sidebar">
       <HeadingAndDescription />
+
       <BrowseAndShare />
       <CommentList />
-      <div className="sidebar__proudly-created">
-        <Text as="sup">
-          🚀 Brocrafted by&nbsp;
-          <Link color="teal.500" href="https://github.com/nugmanoff">
-            Aidar
-          </Link>
-          &nbsp;&&nbsp;
-          <Link color="teal.500" href="https://github.com/murattishkul">
-            Mura
-          </Link>
-        </Text>
-      </div>
     </div>
   );
 };

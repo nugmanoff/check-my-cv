@@ -38,6 +38,9 @@
 .sidebar__comment-list {
   list-style: none;
   margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
   padding: 0;
 }
 

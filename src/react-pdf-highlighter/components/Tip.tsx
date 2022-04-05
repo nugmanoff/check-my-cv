@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 
 import "../style/Tip.css";
 
@@ -68,22 +68,6 @@ export class Tip extends Component<Props, State> {
                   }
                 }}
               />
-              {/*<div className={"Tip__reactions"}>*/}
-              {/*  {["💩", "😱", "😍", "🔥", "😳", "⚠️"].map((_emoji) => (*/}
-              {/*    <label key={_emoji} className={"Tip__label"}>*/}
-              {/*      <input*/}
-              {/*        checked={emoji === _emoji}*/}
-              {/*        type="radio"*/}
-              {/*        name="emoji"*/}
-              {/*        value={_emoji}*/}
-              {/*        onChange={(event) =>*/}
-              {/*          this.setState({ emoji: event.target.value })*/}
-              {/*        }*/}
-              {/*      />*/}
-              {/*      {_emoji}*/}
-              {/*    </label>*/}
-              {/*  ))}*/}
-              {/*</div>*/}
             </div>
             <div>
               <input type="submit" value="Save" />
